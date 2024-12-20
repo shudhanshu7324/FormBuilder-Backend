@@ -1,5 +1,6 @@
 import express from "express";
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
+import cors from 'cors';
 import connectDb from "./config/db.js";
 import UserRouter from './routes/user.route.js'
 
@@ -8,6 +9,7 @@ dotenv.config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("Welcome to Form Builder");
