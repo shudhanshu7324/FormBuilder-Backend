@@ -57,3 +57,14 @@ export const loginUser = async (req,res) => {
         res.status(500).json({ message: "Server error" });
     }
 }
+
+export const userName = async (req,res) => {
+  try {
+    const email = req.user.email;
+    const user = await User.findOne({email})
+    return res.status(200).json(user)
+  } catch (error) {
+    console.log(error)
+    return;
+  }
+}
