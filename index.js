@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDb from "./config/db.js";
 import UserRouter from './routes/user.route.js'
+import FormRouter from './routes/form.route.js'
+import FolderRouter from './routes/folder.route.js'
 
 const app = express();
 dotenv.config();
@@ -16,6 +18,8 @@ app.get("/", (req, res) => {
 });
 
 app.use('/api/v1',UserRouter)
+app.use('/api/v1',FormRouter)
+app.use('/api/v1',FolderRouter)
 
 // server start
 const startServer = async () => {

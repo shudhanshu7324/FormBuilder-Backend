@@ -8,4 +8,5 @@ router.post('/signup', registerUser)
 router.post('/login', loginUser)
 router.get('/username',isLoggedIn,userName)
 
+
 export default router;
