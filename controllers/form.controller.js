@@ -46,4 +46,21 @@ export const createForm = async (req, res) => {
   }
 };
 
+export const getForms = async (req, res) => {
+    try {
+      const userId = req.headers.userid;
+      // console.log(userId)
+  
+      const forms = await Form.find({ userId });
+      if (!forms.length) {
+        return res.status(404).json({ message: "No form found for this user" });
+      }
+      return res.status(200).json({ forms: forms });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Server error" });
+    }
+  };
+  
+
 

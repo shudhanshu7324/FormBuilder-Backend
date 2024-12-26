@@ -28,3 +28,21 @@ export const createFolder = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const getFolders = async (req, res) => {
+  try {
+    const userId = req.headers.userid;
+    // console.log(userId)
+
+    const folders = await Folder.find({ userId });
+    if (!folders.length) {
+      return res.status(404).json({ message: "No folder found for this user" });
+    }
+    return res.status(200).json({ folders: folders });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
