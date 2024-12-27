@@ -1,4 +1,5 @@
 import Folder from "../models/folder.model.js";
+import Form from "../models/standalone.model.js";
 import User from "../models/user.model.js";
 
 export const createFolder = async (req, res) => {
@@ -32,15 +33,17 @@ export const createFolder = async (req, res) => {
 export const getFolders = async (req, res) => {
   try {
     const userId = req.headers.userid;
-    // console.log(userId)
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
 
     const folders = await Folder.find({ userId });
     if (!folders.length) {
       return res.status(404).json({ message: "No folder found for this user" });
     }
-    return res.status(200).json({ folders: folders });
+    return res.status(200).json({ folders });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching folders:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
