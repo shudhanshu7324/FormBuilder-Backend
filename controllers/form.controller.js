@@ -47,20 +47,45 @@ export const createForm = async (req, res) => {
 };
 
 export const getForms = async (req, res) => {
+  try {
+    const userId = req.headers.userid;
+    // console.log(userId)
+
+    const forms = await Form.find({ userId });
+    if (!forms.length) {
+      return res.status(404).json({ message: "No form found for this user" });
+    }
+    return res.status(200).json({ forms: forms });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+export const deleteForm = async (req, res) => {
     try {
-      const userId = req.headers.userid;
-      // console.log(userId)
+      const { id } = req.params; // Form ID from the route parameter
   
-      const forms = await Form.find({ userId });
-      if (!forms.length) {
-        return res.status(404).json({ message: "No form found for this user" });
+      // Find and delete the form
+      const form = await Form.findByIdAndDelete(id);
+      if (!form) {
+        return res.status(404).json({ message: "Form not found" });
       }
-      return res.status(200).json({ forms: forms });
+  
+      // If the form is part of a folder, remove it from the folder's forms array
+      if (form.folderId) {
+        const folder = await Folder.findById(form.folderId);
+        if (folder) {
+          folder.forms = folder.forms.filter(formId => formId.toString() !== id);
+          await folder.save();
+        }
+      }
+  
+      res.status(200).json({ message: "Form deleted successfully" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Server error" });
     }
   };
   
-
-

@@ -45,4 +45,22 @@ export const getFolders = async (req, res) => {
   }
 };
 
+export const deleteFolder = async (req, res) => {
+  try {
+    const { id } = req.params; // Folder ID from the route parameter
 
+    // Find and delete the folder
+    const folder = await Folder.findByIdAndDelete(id);
+    if (!folder) {
+      return res.status(404).json({ message: "Folder not found" });
+    }
+
+    // Delete all forms within the folder
+    await Form.deleteMany({ folderId: id });
+
+    res.status(200).json({ message: "Folder and its forms deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
