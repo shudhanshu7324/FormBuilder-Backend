@@ -5,23 +5,24 @@ import User from "../models/user.model.js";
 export const createForm = async (req, res) => {
   try {
     const { name, folderId } = req.body;
+    const userId = req.headers.userid;
     if (!name) {
       return res.status(400).json({ message: "Form name is required" });
     }
 
-    const user = await User.findById(req.user.id); // Assuming `req.user` has the user's ID
+    const user = await User.findById({userId}); // Assuming `req.user` has the user's ID
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const isFormExist = await Form.findOne({ name, userId: user._id });
+    const isFormExist = await Form.findOne({ name, userId});
     if (isFormExist) {
       return res.status(400).json({ message: "Form already exists with this name" });
     }
 
     const newForm = await Form.create({
       name,
-      userId: user._id,
+      userId,
       folderId: folderId || null,
     });
 
@@ -43,8 +44,7 @@ export const createForm = async (req, res) => {
 
 export const getForms = async (req, res) => {
   try {
-    const userId = req.user.id; // Assuming user ID is stored in `req.user`
-
+    const userId = req.headers.userid;
     const forms = await Form.find({ userId });
     if (!forms.length) {
       return res.status(404).json({ message: "No forms found for this user" });
