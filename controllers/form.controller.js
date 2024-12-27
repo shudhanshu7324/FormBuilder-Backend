@@ -10,7 +10,7 @@ export const createForm = async (req, res) => {
       return res.status(400).json({ message: "Form name is required" });
     }
 
-    const user = await User.findById({userId}); // Assuming `req.user` has the user's ID
+    const user = await User.findById(userId); // Assuming `req.user` has the user's ID
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
